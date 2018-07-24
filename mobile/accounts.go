@@ -157,6 +157,11 @@ func (ks *KeyStore) Lock(address *Address) error {
 	return ks.keystore.Lock(address.address)
 }
 
+// GetPrivateKey get PrivateKey
+func (ks *KeyStore) GetPrivateKey(account *Account) (key []byte, _ error) {
+	return ks.keystore.GetPrivateKey(account.account)
+}
+
 // TimedUnlock unlocks the given account with the passphrase. The account stays
 // unlocked for the duration of timeout (nanoseconds). A timeout of 0 unlocks the
 // account until the program exits. The account must match a unique key file.
