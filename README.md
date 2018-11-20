@@ -55,30 +55,29 @@ https://github.com/ethereum/go-ethereum/wiki/Mobile%3A-Introduction
 3. Import Custom AAR Library
 	1. Copy `geth.aar` into `{Project Roots}/app/libs`
 	2. Add `dirs "libs"` in `{Project Roots}/build.gradle`
-```
-    allprojects {
-        repositories {
-            google()
-            jcenter()
-            ...
-            flatDir {
-                dirs "libs"
-            }
-        }
-    }
-```
-	3. Add dependency in `{Project Roots}/app/build.gradle`
-```
-dependencies {
-		implementation(name: "geth", ext: "aar")
-}
-```
+	```
+	    allprojects {
+		repositories {
+		    google()
+		    jcenter()
+		    ...
+		    flatDir {
+			dirs "libs"
+		    }
+		}
+	    }
+	```
+	3. Add dependency in `{Project Roots}/app/build.gradle`  
+	```
+	dependencies {implementation(name: "geth", ext: "aar")}
+	```
+
 	4. If you are switching from the official library, the interface you modified may not be seen. You can rename the `geth.aar` to `geth1.aar`, then repeat previous step 3. Once the interface gets updated, you are able to rename it back to `geth.aar`
-```
-    p.s. By using the Android Studio file browser in left side, you can check out the interfaces in geth.aar.
-    Switch to "Project" view
-    External Libraries → Gradle: geth:@aar → org → ethereum → KeyStore
-```
+	```
+	p.s. By using the Android Studio file browser in left side, you can check out the interfaces in geth.aar.
+	Switch to "Project" view
+	External Libraries → Gradle: geth:@aar → org → ethereum → KeyStore
+	```
 
 ## *Official Document*
 
