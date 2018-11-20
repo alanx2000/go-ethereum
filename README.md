@@ -1,5 +1,87 @@
 ## Go Ethereum
 
+## *Modification of official Go Ethereum*
+Add a method `GetPrivateKey()` for decrypting private key from keystore
+
+### Source Modification Steps
+Reference [commit/f4edd17f014261c05d89ab1c3d74fe5796867afa](https://github.com/alanx2000/go-ethereum/commit/f4edd17f014261c05d89ab1c3d74fe5796867afa)
+
+1. Clone Go-Ethereum
+	1. Fork from Go-Ethereum https://github.com/ethereum/go-ethereum
+	2. Clone
+    git clone https://github.com/alanx2000/go-ethereum.git
+2. Add GetPrivateKey() method
+	1. Modify underlayer Keystore implementation, add `GetPrivateKey` method
+    Modify `go-ethereum/accounts/keystore/keystore.go`
+    Add `func (ks *KeyStore) GetPrivateKey(a accounts.Account) ([]byte, error)`
+    2. Modify mobile support interface, add `GetPrivateKey` method
+    Mofify `go-ethereum/mobile/accounts.go`
+    Add `func (ks *KeyStore) GetPrivateKey(account *Account) (key []byte, _ error)`
+
+```
+The return type (ks *KeyStore) will make
+the GetPrivateKey() method generated in Keystore.class bundled in geth.aar
+```
+
+## *Build & Integrate with your own app*
+1. Build Go-Ethereum
+https://github.com/ethereum/go-ethereum/wiki/Installation-Instructions-for-Mac
+```
+    brew install go
+    cd go-ethereum
+    make geth
+```
+
+2. Build Mobile Support (Android)
+https://github.com/ethereum/go-ethereum/wiki/Mobile%3A-Introduction
+```
+    vim ~/.bash_profile
+
+    export ANDROID_HOME=~/Library/Android/sdk
+    export ANDROID_NDK=$ANDROID_HOME/ndk-bundle
+    export PATH=$PATH:$ANDROID_HOME
+    export PATH=$PATH:$ANDROID_NDK
+    export PATH=$PATH:$ANDROID_HOME/tools
+    export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+    cd go-ethereum
+    make android
+
+    Output:
+    go-ethereum/build/bin/geth.aar
+```
+
+3. Import Custom AAR Library
+	1. Copy `geth.aar` into `{Project Roots}/app/libs`
+	2. Add `dirs "libs"` in `{Project Roots}/build.gradle`
+```
+    allprojects {
+        repositories {
+            google()
+            jcenter()
+            ...
+            flatDir {
+                dirs "libs"
+            }
+        }
+    }
+```
+	3. Add dependency in `{Project Roots}/app/build.gradle`
+```
+dependencies {
+		implementation(name: "geth", ext: "aar")
+}
+```
+	4. If you are switching from the official library, the interface you modified may not be seen. You can rename the `geth.aar` to `geth1.aar`, then repeat previous step 3. Once the interface gets updated, you are able to rename it back to `geth.aar`
+
+    ```
+    p.s By using the Android Studio file browser in left side, you can check out the interfaces in geth.aar.
+    Switch to "Project" view
+    External Libraries → Gradle: geth:@aar → org → ethereum → KeyStore
+    ```
+
+## *Official Document*
+
 Official golang implementation of the Ethereum protocol.
 
 [![API Reference](
